@@ -112,7 +112,7 @@ class ReviewResponse {
 
             @SerializedName("rating")
             @Expose
-            var rating: Int? = null
+            var rating: Double? = null
         }
     }
 }
