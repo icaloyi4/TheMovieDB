@@ -87,8 +87,14 @@ class MainActivity : AppCompatActivity(), MoviesAdapter.onItemClick, AdapterView
                     if (visibleItemCountPopular + pastVisiblesItemsPopular >= totalItemCountPopular) {
 //                        Toast.makeText(ctx, "Turun", Toast.LENGTH_SHORT).show()
                         m.countMovie++
-                        m.repo.getMovieByGenre(m.countMovie,"")
-                            .enqueue(m.callbackMovie)
+                        if (spin_genre.selectedItemPosition==0){
+                            m.repo.getMovieByGenre(m.countMovie,"")
+                                .enqueue(m.callbackMovie)
+                        } else {
+                            m.repo.getMovieByGenre(m.countMovie,m.listGenre[spin_genre.selectedItemPosition].id.toString())
+                                .enqueue(m.callbackMovie)
+                        }
+
                     }
                 }
             }
