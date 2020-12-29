@@ -1,8 +1,11 @@
 package com.example.themoviedb.mvvm.viewmodel
 
+import android.content.Context
+import android.widget.ArrayAdapter
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.themoviedb.adapter.MoviesAdapter
 import com.example.themoviedb.api.LoadingState
 import com.example.themoviedb.api.response.DataResponse
 import com.example.themoviedb.api.response.GenreResponse
@@ -13,6 +16,14 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MainViewModel(val repo: MainRepository) : ViewModel() {
+    var countMovie: Int = 1
+    var adapter : MoviesAdapter? = null
+    var listMovie : ArrayList<MovieResponse> = arrayListOf()
+    lateinit var ctx : Context
+
+    lateinit var adapterGenre : ArrayAdapter<GenreResponse.Genre>
+    var listGenre : ArrayList<GenreResponse.Genre> = arrayListOf()
+
     private val _loadingState = MutableLiveData<LoadingState>()
     val loadingState: LiveData<LoadingState>
         get() = _loadingState

@@ -4,7 +4,9 @@ import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.example.themoviedb.api.ApiClient
+import com.example.themoviedb.mvvm.model.DetailRepository
 import com.example.themoviedb.mvvm.model.MainRepository
+import com.example.themoviedb.mvvm.viewmodel.DetailViewModel
 import com.example.themoviedb.mvvm.viewmodel.MainViewModel
 import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -16,11 +18,17 @@ val viewModelModule = module {
     viewModel {
         MainViewModel(get())
     }
+    viewModel {
+        DetailViewModel(get())
+    }
 }
 
 val repositoryModule = module {
     single {
         MainRepository(get())
+    }
+    single {
+        DetailRepository(get())
     }
 }
 

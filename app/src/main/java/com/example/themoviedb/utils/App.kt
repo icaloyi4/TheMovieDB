@@ -9,6 +9,7 @@ import org.koin.core.logger.Level
 class App : Application() {
     companion object {
         var API_KEY = "fd4694b8b546e71f7351fc3d78ec3f61"
+        var YT_API_KEY = "AIzaSyBCwzkprEPy02Kc6eBs8aloqoRTYJ5smks"
     }
 
     override fun onCreate() {
