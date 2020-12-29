@@ -26,29 +26,20 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DetailActivity : AppCompatActivity(), ScrollViewListener {
 
-    private var countReview: Int = 1
-    private val mv by viewModel<DetailViewModel>()
-
-    lateinit var context : Context
-
-    var idYT = ""
-
-    var adapterReview : ReviewAdapter? = null
-    var listReview : ArrayList<ReviewResponse.Result> = arrayListOf()
-    var model : MovieResponse? = null
+    private val m by viewModel<DetailViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        context = this;
+        m.context = this;
 
         lin_back.setOnClickListener { finish()}
 
-        model = intent.getSerializableExtra("movie") as MovieResponse?
+        m.model = intent.getSerializableExtra("movie") as MovieResponse?
         txt_genre.text = intent.getStringExtra("genre")
 
-        if (model!=null) {
+        if (m.model!=null) {
             init()
             fetchData()
         } else {
@@ -59,7 +50,7 @@ class DetailActivity : AppCompatActivity(), ScrollViewListener {
 
     private fun init(){
 
-        Picasso.get().load("https://image.tmdb.org/t/p/w500/${model!!.backdropPath}")
+        Picasso.get().load("https://image.tmdb.org/t/p/w500/${m.model!!.backdropPath}")
             .into(img_foto, object : Callback {
                 override fun onSuccess() {
                     img_foto.scaleType = ImageView.ScaleType.CENTER_CROP;
@@ -70,18 +61,18 @@ class DetailActivity : AppCompatActivity(), ScrollViewListener {
                 }
 
             })
-        txt_title.text = model!!.title.toString()
-        txt_release.text = Utils.changeDateFormat(model!!.releaseDate.toString())
-        txt_content.text = model!!.overview.toString()
+        txt_title.text = m.model!!.title.toString()
+        txt_release.text = Utils.changeDateFormat(m.model!!.releaseDate.toString())
+        txt_content.text = m.model!!.overview.toString()
 
         img_play.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
-                if (idYT.isNotEmpty()) {
-                    val i  = Intent(context, YoutubeActivity::class.java)
-                    i.putExtra("idYt", idYT)
+                if (m.idYT.isNotEmpty()) {
+                    val i  = Intent(m.context, YoutubeActivity::class.java)
+                    i.putExtra("idYt", m.idYT)
                     startActivity(i)
                 } else {
-                    Toast.makeText(context, "No Video Found", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(m.context, "No Video Found", Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -92,24 +83,24 @@ class DetailActivity : AppCompatActivity(), ScrollViewListener {
 
     private fun fetchData() {
 
-        mv.reviewData.observe(this, Observer {
+        m.reviewData.observe(this, Observer {
             if (it.getResults().isNotEmpty()) {
                 txt_no_review.visibility = View.GONE
-                listReview.addAll(it.getResults())
+                m.listReview.addAll(it.getResults())
             }
-            adapterReview!!.notifyDataSetChanged()
+            m.adapterReview!!.notifyDataSetChanged()
         })
 
-        mv.ytData.observe(this, Observer {
+        m.ytData.observe(this, Observer {
             if (it.getResults().isNotEmpty()) {
                 it.getResults().forEach { yt ->
                     if (yt.key!=null){
-                        idYT = yt.key!!
+                        m.idYT = yt.key!!
                     }
 
                 }
 
-                if (idYT.isNotEmpty()){
+                if (m.idYT.isNotEmpty()){
                     img_play.visibility = View.VISIBLE
                 } else {
                     img_play.visibility = View.GONE
@@ -117,7 +108,7 @@ class DetailActivity : AppCompatActivity(), ScrollViewListener {
             }
         })
 
-        mv.loadingState.observe(this, Observer {
+        m.loadingState.observe(this, Observer {
             when (it.status) {
                 LoadingState.Status.FAILED -> {
                     Toast.makeText(this, it.msg, Toast.LENGTH_SHORT).show()
@@ -134,11 +125,11 @@ class DetailActivity : AppCompatActivity(), ScrollViewListener {
     }
 
     override fun onStart() {
-        mv.repo.getReview(countReview, model!!.id.toString())
-            .enqueue(mv.callbackReview)
+        m.repo.getReview(m.countReview, m.model!!.id.toString())
+            .enqueue(m.callbackReview)
         initRecycle()
 
-        mv.repo.getYoutube(model!!.id.toString()).enqueue(mv.callbackYt)
+        m.repo.getYoutube(m.model!!.id.toString()).enqueue(m.callbackYt)
         super.onStart()
     }
 
@@ -146,25 +137,8 @@ class DetailActivity : AppCompatActivity(), ScrollViewListener {
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         lv_review.layoutManager = layoutManager
 
-        adapterReview = ReviewAdapter(this, listReview)
-        lv_review.adapter = adapterReview
-/*
-        lv_review.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy > 0)  //check for scroll down
-                {
-                    var visibleItemCountReview = layoutManager.getChildCount()
-                    var totalItemCountReview = layoutManager.getItemCount()
-                    var pastVisiblesItemsReview = layoutManager.findFirstVisibleItemPosition()
-                    if (visibleItemCountReview + pastVisiblesItemsReview >= totalItemCountReview) {
-                        *//*countReview++
-                        mv.repo.getReview(countReview, model!!.id.toString())
-                            .enqueue(mv.callbackReview)*//*
-                        Toast.makeText(context, "Turun", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        })*/
+        m.adapterReview = ReviewAdapter(this, m.listReview)
+        lv_review.adapter = m.adapterReview
 
         lv_review.setNestedScrollingEnabled(false)
 
@@ -182,10 +156,9 @@ class DetailActivity : AppCompatActivity(), ScrollViewListener {
 
         // if diff is zero, then the bottom has been reached
         if (diff == 0) {
-//            Toast.makeText(context, "Turun", Toast.LENGTH_SHORT).show()
-            countReview++
-            mv.repo.getReview(countReview, model!!.id.toString())
-                .enqueue(mv.callbackReview)
+            m.countReview++
+            m.repo.getReview(m.countReview, m.model!!.id.toString())
+                .enqueue(m.callbackReview)
         }
     }
 }
