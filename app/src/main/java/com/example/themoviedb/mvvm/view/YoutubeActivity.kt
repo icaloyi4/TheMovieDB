@@ -33,7 +33,7 @@ class YoutubeActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListen
         p2: Boolean
     ) {
         if (!p2) {
-            p1?.loadVideo(idYt); // Plays https://www.youtube.com/watch?v=fhWaJi1Hsfo
+            p1?.loadVideo(idYt)
         }
     }
 
