@@ -17,7 +17,7 @@ class DetailRepository() {
     }
 
     var api:ApiClient = retrofit.create(ApiClient::class.java)
-    fun getReview(page : Int, id : String) = api.getReview(id, page )
-    fun getYoutube(id:String) = api.getYTVid(id)
+    suspend fun getReview(page : Int, id : String) = api.getReview(id, page )
+    suspend fun getYoutube(id:String) = api.getYTVid(id)
 
 }

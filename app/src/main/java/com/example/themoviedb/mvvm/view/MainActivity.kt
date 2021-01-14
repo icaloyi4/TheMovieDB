@@ -19,12 +19,21 @@ import com.example.themoviedb.api.response.MovieResponse
 import com.example.themoviedb.mvvm.viewmodel.MainViewModel
 import com.example.themoviedb.mvvm.factory.MainViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 
-class MainActivity : AppCompatActivity(), MoviesAdapter.onItemClick, AdapterView.OnItemSelectedListener {
+class MainActivity() : AppCompatActivity(), MoviesAdapter.onItemClick, AdapterView.OnItemSelectedListener,CoroutineScope {
 //    private val m by viewModel<MainViewModel>()
 
     lateinit var m : MainViewModel
+    lateinit var job : Job
+
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.Main
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +41,8 @@ class MainActivity : AppCompatActivity(), MoviesAdapter.onItemClick, AdapterView
 
         var mainViewModelFactory = MainViewModelFactory()
         m = ViewModelProviders.of(this,mainViewModelFactory).get(MainViewModel::class.java)
+
+        job = Job()
 
         m.ctx = this
 
@@ -95,11 +106,17 @@ class MainActivity : AppCompatActivity(), MoviesAdapter.onItemClick, AdapterView
 //                        Toast.makeText(ctx, "Turun", Toast.LENGTH_SHORT).show()
                         m.countMovie++
                         if (spin_genre.selectedItemPosition==0){
-                            m.repo.getMovieByGenre(m.countMovie,"")
-                                .enqueue(m.callbackMovie)
+                            launch {
+                                m.repo.getMovieByGenre(m.countMovie,"")
+                                    .enqueue(m.callbackMovie)
+                            }
+
                         } else {
-                            m.repo.getMovieByGenre(m.countMovie,m.listGenre[spin_genre.selectedItemPosition].id.toString())
-                                .enqueue(m.callbackMovie)
+                            launch {
+                                m.repo.getMovieByGenre(m.countMovie,m.listGenre[spin_genre.selectedItemPosition].id.toString())
+                                    .enqueue(m.callbackMovie)
+                            }
+
                         }
 
                     }
@@ -139,15 +156,21 @@ class MainActivity : AppCompatActivity(), MoviesAdapter.onItemClick, AdapterView
         if (p2==0){
             m.countMovie = 1
             m.listMovie.clear()
-            m.repo.getMovieByGenre(m.countMovie,"")
-                .enqueue(m.callbackMovie)
-            txt_genre.text = "All Movie"
+            launch {
+                m.repo.getMovieByGenre(m.countMovie,"")
+                    .enqueue(m.callbackMovie)
+                txt_genre.text = "All Movie"
+            }
         } else {
             m.countMovie = 1
             m.listMovie.clear()
-            m.repo.getMovieByGenre(m.countMovie,m.listGenre[p2].id.toString())
-                .enqueue(m.callbackMovie)
-            txt_genre.text = m.listGenre[p2].name.toString()
+
+            launch {
+                m.repo.getMovieByGenre(m.countMovie,m.listGenre[p2].id.toString())
+                    .enqueue(m.callbackMovie)
+                txt_genre.text = m.listGenre[p2].name.toString()
+            }
+
         }
     }
 

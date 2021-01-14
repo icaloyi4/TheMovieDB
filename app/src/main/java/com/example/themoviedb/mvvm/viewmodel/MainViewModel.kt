@@ -5,12 +5,14 @@ import android.widget.ArrayAdapter
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.themoviedb.adapter.MoviesAdapter
 import com.example.themoviedb.api.LoadingState
 import com.example.themoviedb.api.response.DataResponse
 import com.example.themoviedb.api.response.GenreResponse
 import com.example.themoviedb.api.response.MovieResponse
 import com.example.themoviedb.mvvm.model.MainRepository
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -77,6 +79,9 @@ class MainViewModel(val repo: MainRepository) : ViewModel() {
     private fun fetchData(page : Int) {
         _loadingState.postValue(LoadingState.LOADING)
 //        repo.getMovieByGenre(page,"").enqueue(callbackMovie)
-        repo.getMovieGenre().enqueue(callbackGenre)
+        viewModelScope.launch {
+            repo.getMovieGenre().enqueue(callbackGenre)
+        }
+
     }
 }

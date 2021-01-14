@@ -21,13 +21,24 @@ import com.example.themoviedb.utils.Utils
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 
-class DetailActivity : AppCompatActivity(), ScrollViewListener {
+class DetailActivity : AppCompatActivity(), ScrollViewListener, CoroutineScope {
 
 //    private val m by viewModel<DetailViewModel>()
 
     lateinit var m : DetailViewModel
+    lateinit var job : Job
+
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.Main
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
@@ -35,6 +46,7 @@ class DetailActivity : AppCompatActivity(), ScrollViewListener {
         var detailViewModelFactory = DetailViewModelFactory()
         m = ViewModelProviders.of(this,detailViewModelFactory).get(DetailViewModel::class.java)
 
+        job = Job()
         m.context = this;
 
         lin_back.setOnClickListener { finish()}
@@ -128,11 +140,12 @@ class DetailActivity : AppCompatActivity(), ScrollViewListener {
     }
 
     override fun onStart() {
-        m.repo.getReview(m.countReview, m.model!!.id.toString())
-            .enqueue(m.callbackReview)
-        initRecycle()
-
-        m.repo.getYoutube(m.model!!.id.toString()).enqueue(m.callbackYt)
+        launch {
+            m.repo.getReview(m.countReview, m.model!!.id.toString())
+                .enqueue(m.callbackReview)
+            initRecycle()
+            m.repo.getYoutube(m.model!!.id.toString()).enqueue(m.callbackYt)
+        }
         super.onStart()
     }
 
@@ -160,8 +173,10 @@ class DetailActivity : AppCompatActivity(), ScrollViewListener {
         // if diff is zero, then the bottom has been reached
         if (diff == 0) {
             m.countReview++
-            m.repo.getReview(m.countReview, m.model!!.id.toString())
-                .enqueue(m.callbackReview)
+            launch {
+                m.repo.getReview(m.countReview, m.model!!.id.toString())
+                    .enqueue(m.callbackReview)
+            }
         }
     }
 }

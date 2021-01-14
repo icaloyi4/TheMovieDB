@@ -18,6 +18,6 @@ class MainRepository() {
 
     var api:ApiClient = retrofit.create(ApiClient::class.java)
 
-    fun getMovieByGenre(page: Int, genre: String) = api.getMovie(page, genre)
-    fun getMovieGenre() = api.getMovieGenre()
+    suspend fun getMovieByGenre(page: Int, genre: String) = api.getMovie(page, genre)
+    suspend fun getMovieGenre() = api.getMovieGenre()
 }
