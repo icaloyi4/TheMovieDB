@@ -103,7 +103,7 @@ class DetailActivity : AppCompatActivity(), ScrollViewListener, CoroutineScope {
                 txt_no_review.visibility = View.GONE
                 m.listReview.addAll(it.getResults())
             }
-            m.adapterReview!!.notifyDataSetChanged()
+            m.adapterReview?.notifyDataSetChanged()
         })
 
         m.ytData.observe(this, Observer {
