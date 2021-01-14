@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +14,7 @@ import com.example.themoviedb.R
 import com.example.themoviedb.adapter.ReviewAdapter
 import com.example.themoviedb.api.LoadingState
 import com.example.themoviedb.api.response.MovieResponse
+import com.example.themoviedb.databinding.ActivityDetailBinding
 import com.example.themoviedb.mvvm.factory.DetailViewModelFactory
 import com.example.themoviedb.mvvm.viewmodel.DetailViewModel
 import com.example.themoviedb.utils.ScrollViewExt
@@ -41,7 +43,7 @@ class DetailActivity : AppCompatActivity(), ScrollViewListener, CoroutineScope {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail)
+        val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
 
         var detailViewModelFactory = DetailViewModelFactory()
         m = ViewModelProviders.of(this,detailViewModelFactory).get(DetailViewModel::class.java)
@@ -57,6 +59,7 @@ class DetailActivity : AppCompatActivity(), ScrollViewListener, CoroutineScope {
         if (m.model!=null) {
             init()
             fetchData()
+            binding.mv = m.model
         } else {
             Toast.makeText(this, "No Data", Toast.LENGTH_SHORT).show()
             finish()

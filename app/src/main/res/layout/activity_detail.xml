@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="mv" type="com.example.themoviedb.api.response.MovieResponse"/>
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".mvvm.view.DetailActivity">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline5"
@@ -101,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:singleLine="true"
-                    android:text="Title"
+                    android:text="@{mv.title}"
                     android:textAlignment="viewStart"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -112,7 +114,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:singleLine="true"
-                    android:text="Title"
+                    android:text="@{mv.releaseDate}"
                     android:textAlignment="viewStart"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -171,7 +173,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:text="Title"
+                    android:text="@{mv.overview}"
                     android:textAlignment="viewStart"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -214,3 +216,4 @@
         app:layout_constraintTop_toBottomOf="@id/guideline5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
