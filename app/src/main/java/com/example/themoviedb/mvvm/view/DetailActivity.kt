@@ -1,6 +1,5 @@
 package com.example.themoviedb.mvvm.view
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -8,12 +7,13 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.themoviedb.R
 import com.example.themoviedb.adapter.ReviewAdapter
 import com.example.themoviedb.api.LoadingState
 import com.example.themoviedb.api.response.MovieResponse
-import com.example.themoviedb.api.response.ReviewResponse
+import com.example.themoviedb.mvvm.factory.DetailViewModelFactory
 import com.example.themoviedb.mvvm.viewmodel.DetailViewModel
 import com.example.themoviedb.utils.ScrollViewExt
 import com.example.themoviedb.utils.ScrollViewListener
@@ -21,16 +21,19 @@ import com.example.themoviedb.utils.Utils
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class DetailActivity : AppCompatActivity(), ScrollViewListener {
 
-    private val m by viewModel<DetailViewModel>()
+//    private val m by viewModel<DetailViewModel>()
 
+    lateinit var m : DetailViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+
+        var detailViewModelFactory = DetailViewModelFactory()
+        m = ViewModelProviders.of(this,detailViewModelFactory).get(DetailViewModel::class.java)
 
         m.context = this;
 

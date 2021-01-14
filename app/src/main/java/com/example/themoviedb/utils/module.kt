@@ -13,6 +13,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+/*
 
 val viewModelModule = module {
     viewModel {
@@ -63,4 +64,4 @@ val retrofitModule = module {
     single { provideGson() }
     single { provideHttpClient() }
     single { provideRetrofit(get(), get()) }
-}
+}*/

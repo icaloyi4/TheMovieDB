@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.themoviedb.R
@@ -16,19 +17,25 @@ import com.example.themoviedb.api.LoadingState
 import com.example.themoviedb.api.response.GenreResponse
 import com.example.themoviedb.api.response.MovieResponse
 import com.example.themoviedb.mvvm.viewmodel.MainViewModel
+import com.example.themoviedb.mvvm.factory.MainViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class MainActivity : AppCompatActivity(), MoviesAdapter.onItemClick, AdapterView.OnItemSelectedListener {
-    private val m by viewModel<MainViewModel>()
+//    private val m by viewModel<MainViewModel>()
 
+    lateinit var m : MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        var mainViewModelFactory = MainViewModelFactory()
+        m = ViewModelProviders.of(this,mainViewModelFactory).get(MainViewModel::class.java)
+
         m.ctx = this
+
+
 
 //        supportActionBar?.title = "Home"
         var genre : GenreResponse.Genre = GenreResponse.Genre()
@@ -46,12 +53,12 @@ class MainActivity : AppCompatActivity(), MoviesAdapter.onItemClick, AdapterView
     private fun fetchDataAll() {
         m.movieData.observe(this, Observer {
             it.results?.let { it1 -> m.listMovie.addAll(it1) }
-            m.adapter!!.notifyDataSetChanged()
+            m.adapter?.notifyDataSetChanged()
         })
 
         m.genreData.observe(this, Observer {
             it.getGenres()?.let { it1 -> m.listGenre.addAll(it1) }
-            m.adapterGenre!!.notifyDataSetChanged()
+            m.adapterGenre?.notifyDataSetChanged()
         })
 
 
