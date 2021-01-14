@@ -1,6 +1,6 @@
 package com.example.themoviedb.mvvm.model
 
-import com.example.themoviedb.api.APIComponent
+import com.example.themoviedb.api.InjectComponent
 import com.example.themoviedb.api.ApiClient
 import com.example.themoviedb.utils.App
 import retrofit2.Retrofit
@@ -12,8 +12,8 @@ class DetailRepository() {
 
     init {
 
-        var apiComponent : APIComponent =  App.apiComponent
-        apiComponent.inject(this)
+        var injectComponent : InjectComponent =  App.injectComponent
+        injectComponent.inject(this)
     }
 
     var api:ApiClient = retrofit.create(ApiClient::class.java)

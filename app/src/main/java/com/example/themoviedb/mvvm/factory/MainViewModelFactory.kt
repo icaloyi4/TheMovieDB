@@ -2,7 +2,7 @@ package com.example.themoviedb.mvvm.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.themoviedb.api.APIComponent
+import com.example.themoviedb.api.InjectComponent
 import com.example.themoviedb.mvvm.model.MainRepository
 import com.example.themoviedb.mvvm.viewmodel.MainViewModel
 import com.example.themoviedb.utils.App
@@ -14,8 +14,8 @@ class MainViewModelFactory : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
 
-        var apiComponent :APIComponent =  App.apiComponent
-        apiComponent.inject(this)
+        var injectComponent :InjectComponent =  App.injectComponent
+        injectComponent.inject(this)
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             return MainViewModel(retrofitRepository) as T
         }

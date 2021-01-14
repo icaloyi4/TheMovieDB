@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [APIModule::class])
-interface APIComponent {
+interface InjectComponent {
     fun inject(mainRepository: MainRepository)
     fun inject(mainViewModel: MainViewModel)
     fun inject(mainViewModelFactory: MainViewModelFactory)
